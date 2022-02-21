@@ -6,6 +6,7 @@ library(ggplot2)
 library(shiny)
 library(plotly)
 library(shinyWidgets)
+library(dashboardthemes)
 
 #Loading the files
 file_list = list.files(pattern="*.csv")%>%
@@ -25,7 +26,7 @@ years<-unique(file_list$Year)
 
 
 # Creating the dashboard
-UI<-dashboardPage(
+UI<-dashboardPage(skin = "red",
   dashboardHeader(title = "HR Management Dashboard",titleWidth = 800),
   dashboardSidebar(
     sidebarMenu(id="sidebarid",
@@ -52,20 +53,26 @@ UI<-dashboardPage(
     )
   ),
   dashboardBody(
+    shinyDashboardThemes(theme = "grey_dark"),
     tabItems(tabItem(tabName = "dash",
                      box(width=12,
                          valueBoxOutput("val1"),
                          valueBoxOutput("val2"),
                          valueBoxOutput("val3")
                          ),
-                     box(width=6,collapsible = T,plotlyOutput("bar")),
-                     box(width = 6,collapsible = T,plotlyOutput("col")),
-                     box(width = 4,collapsible = T,plotlyOutput("col2")),
-                     box(width = 4,collapsible = T,plotlyOutput("bar2")),
-                     box(width = 4,collapsible = T,plotlyOutput("bar3")),
-                     box(width = 4,collapsible = T,plotlyOutput("pie")),
-                     box(width = 4,collapsible = T,plotlyOutput("bar5")),
-                     box(width = 4,collapsible = T,plotlyOutput("bar6"))
+                     
+                     tabBox(width=6,
+                     tabPanel("Months",plotlyOutput("bar")),
+                     tabPanel("Region",plotlyOutput("bar2")),
+                     tabPanel("EthnicGroup",plotlyOutput("col")),
+                     tabPanel("Tenure",plotlyOutput("col2")),
+                           ),
+                     tabBox(width = 6,side = "right",
+                            tabPanel("Termination",plotlyOutput("bar3")),
+                            tabPanel("Age",plotlyOutput("pie")),
+                            tabPanel("PayType",plotlyOutput("bar5")),
+                            tabPanel("FP",plotlyOutput("bar6"))
+                           )
                      )
              )
     
